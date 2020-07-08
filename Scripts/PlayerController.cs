@@ -2,19 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-	private bool crouch;
+	private bool isCrouch;
 	public float jump;
 	public float speed;
-	public Animator anim;
+	private bool isGround;
+	private Animator animator;
 	private BoxCollider2D boxCollider2D;
 	private Rigidbody2D rigidbody2D;
 	public float boxcrouchsizeX, boxcrouchsizeY, boxcrouchoffsetX, boxcrouchoffsetY;
 	public float boxidlesizeX, boxidlesizeY, boxidleoffsetX, boxidleoffsetY;
 	private void Awake()
 	{
+		animator = GetComponent<Animator>();
 		boxCollider2D = GetComponent<BoxCollider2D>();
 		rigidbody2D = GetComponent<Rigidbody2D>();
 	}
@@ -37,7 +40,7 @@ public class PlayerController : MonoBehaviour
 	}
 	private void PlayerMovementanimation(float horizontal, float vertical)
 	{
-		anim.SetFloat("Speed", Mathf.Abs(horizontal));
+		animator.SetFloat("Speed", Mathf.Abs(horizontal));
 		Vector3 scale = transform.localScale;
 		if (horizontal < 0)
 		{
@@ -51,46 +54,54 @@ public class PlayerController : MonoBehaviour
 
 		if (vertical > 0)
 		{
-			anim.SetBool("Jump", true);
+			isGround = false;
+			animator.SetBool("Jump", true);
 		}
 		else
 		{
-			anim.SetBool("Jump", false);
+			animator.SetBool("Jump", false);
 		}
 	}
-
 	private void MoveCharacter(float horizontal, float vertical)
 	{
 		Vector3 position = transform.position;
 		position.x += horizontal * speed * Time.deltaTime;
 		transform.position = position;
-		Debug.Log(transform.position);
 
-		if (vertical > 0)
+		if (vertical > 0 && isGround == true)
 		{
 			rigidbody2D.AddForce(Vector2.up * jump);
 		}
 	}
 	private void PlayerIdle()
 	{
-		anim.Play("Player_Idle");
+		isCrouch = false;
+		animator.SetBool("Crouch", isCrouch);
 		boxCollider2D.size = new Vector2(boxidlesizeX, boxidlesizeY);
 		boxCollider2D.offset = new Vector2(boxidleoffsetX, boxidleoffsetY);
 	}
 	private void PlayerCrouch()
 	{
-		if (crouch == false)
+		isCrouch = true;
+		animator.SetBool("Crouch", isCrouch);
+		boxCollider2D.size = new Vector2(boxcrouchsizeX, boxcrouchsizeY);
+		boxCollider2D.offset = new Vector2(boxcrouchoffsetX, boxcrouchoffsetY);
+	}
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if (collision.gameObject.tag == "Ground")
 		{
-			crouch = true;
+			isGround = true;
 		}
-		anim.SetBool("Crouch", crouch);
-		if (anim.GetBool("Crouch"))
+		if (collision.gameObject.tag == "DeathCondition")
 		{
-			crouch = false;
-			anim.Play("Player_Crouch");
-			boxCollider2D.size = new Vector2(boxcrouchsizeX, boxcrouchsizeY);
-			boxCollider2D.offset = new Vector2(boxcrouchoffsetX, boxcrouchoffsetY);
+			StartCoroutine(RestartTheLevel(SceneManager.GetActiveScene().name));
 		}
-		anim.SetBool("Crouch", crouch);
+	}
+	IEnumerator RestartTheLevel(string activeScene)
+	{
+		animator.Play("Player_Death");
+		yield return new WaitForSeconds(1f);
+		SceneManager.LoadScene(activeScene);
 	}
 }
