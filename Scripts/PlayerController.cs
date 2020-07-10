@@ -96,11 +96,11 @@ public class PlayerController : MonoBehaviour
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.gameObject.tag == "Ground")
+		if (collision.gameObject.layer.Equals(8))
 		{
 			isGround = true;
 		}
-		if (collision.gameObject.tag == "DeathCondition")
+		if (collision.gameObject.layer.Equals(9)) 
 		{
 			StartCoroutine(RestartTheLevel(SceneManager.GetActiveScene().name));
 		}
