@@ -114,13 +114,12 @@ public class PlayerController : MonoBehaviour
 		}
 		if (collision.gameObject.layer.Equals(9)) 
 		{
-			StartCoroutine(RestartTheLevel(SceneManager.GetActiveScene().name));
+			RestartTheLevel(SceneManager.GetActiveScene().name);
 		}
 	}
-	IEnumerator RestartTheLevel(string activeScene)
+	public void RestartTheLevel(string activeScene)
 	{
 		animator.Play("Player_Death");
-		yield return new WaitForSeconds(1f);
 		SceneManager.LoadScene(activeScene);
 	}
 }
