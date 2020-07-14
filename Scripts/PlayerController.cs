@@ -17,12 +17,21 @@ public class PlayerController : MonoBehaviour
 	public float boxidlesizeX, boxidlesizeY, boxidleoffsetX, boxidleoffsetY;
 	public ScoreController scoreController;
 	public GameOverController gameOverController;
+	public GameObject[] heart;
+	private int healthCount = 3;
+	private int i = 0;
 
 
 	public void KillPlayer()
 	{
-		gameOverController.PlayerDied();
-		this.enabled = false;
+		healthCount -= 1;
+		heart[i].SetActive(false);
+		if (healthCount == 0)
+		{
+			gameOverController.PlayerDied();
+			this.enabled = false;
+		}
+		i++;
 	}
 
 	public void PickUpKey()
@@ -108,7 +117,7 @@ public class PlayerController : MonoBehaviour
 		{
 			isGround = true;
 		}
-		if (collision.gameObject.layer.Equals(9)) 
+		if (collision.gameObject.layer.Equals(9))
 		{
 			RestartTheLevel(SceneManager.GetActiveScene().name);
 		}
