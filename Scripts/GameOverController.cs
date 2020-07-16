@@ -15,7 +15,8 @@ public class GameOverController : MonoBehaviour
 
 	private void RelodLevel()
 	{
-		SceneManager.LoadScene(0);
+		Scene scene = SceneManager.GetActiveScene();
+		SceneManager.LoadScene(scene.buildIndex);
 	}
 
 	public void PlayerDied()
