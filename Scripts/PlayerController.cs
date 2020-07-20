@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 	private bool isCrouch;
 	public float jump;
 	public float speed;
-	private bool isGround;
+	public bool isGround;
 	private Animator animator;
 	private BoxCollider2D boxCollider2D;
 	private Rigidbody2D rigidbody2D;
