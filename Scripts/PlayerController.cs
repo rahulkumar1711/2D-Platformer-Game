@@ -17,23 +17,33 @@ public class PlayerController : MonoBehaviour
 	public float boxidlesizeX, boxidlesizeY, boxidleoffsetX, boxidleoffsetY;
 	public ScoreController scoreController;
 	public GameOverController gameOverController;
-	public GameObject[] heart;
-	private int healthCount = 3;
-	private int i = 0;
-
+	public HealthController healthController;
+	private int healthCount;
 
 	public void KillPlayer()
 	{
+		animator.Play("Player_Death");
+		StartCoroutine(DelayTime());
+		this.enabled = false;
+	}
+	private void Start()
+	{
+		healthCount = healthController.GetHealthLength();
+	}
+	public void DecreaseHealth()
+	{
 		healthCount -= 1;
-		heart[i].SetActive(false);
+		healthController.UpdateLives(healthCount);
 		if (healthCount == 0)
 		{
-			gameOverController.PlayerDied();
-			this.enabled = false;
+			KillPlayer();
 		}
-		i++;
 	}
-
+	IEnumerator DelayTime()
+	{
+		yield return new WaitForSeconds(1f);
+		gameOverController.PlayerDied();
+	}
 	public void PickUpKey()
 	{
 		scoreController.IncreaseScore(10);
