@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 	private bool isCrouch;
 	public float jump;
 	public float speed;
-	private bool isGround;
+	public bool isGround;
 	private Animator animator;
 	private BoxCollider2D boxCollider2D;
 	private Rigidbody2D rigidbody2D;
@@ -104,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
 		if (vertical > 0 && isGround == true)
 		{
+			SoundsManager.Instance.Play(Sounds.PlayerJump);
 			rigidbody2D.AddForce(Vector2.up * jump);
 		}
 	}
@@ -129,12 +130,7 @@ public class PlayerController : MonoBehaviour
 		}
 		if (collision.gameObject.layer.Equals(9))
 		{
-			RestartTheLevel(SceneManager.GetActiveScene().name);
+			KillPlayer();
 		}
-	}
-	public void RestartTheLevel(string activeScene)
-	{
-		animator.Play("Player_Death");
-		SceneManager.LoadScene(activeScene);
 	}
 }

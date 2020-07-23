@@ -12,15 +12,15 @@ public class GameOverController : MonoBehaviour
 	{
 		buttonRestart.onClick.AddListener(() => RelodLevel());
 	}
-
-	private void RelodLevel()
-	{
-		Scene scene = SceneManager.GetActiveScene();
-		SceneManager.LoadScene(scene.buildIndex);
-	}
-
 	public void PlayerDied()
 	{
+		SoundsManager.Instance.PlayMusic(Sounds.PlayerDeath);
 		gameObject.SetActive(true);
+	}
+	private void RelodLevel()
+	{
+		SoundsManager.Instance.PlayMusic(Sounds.Music);
+		Scene scene = SceneManager.GetActiveScene();
+		SceneManager.LoadScene(scene.buildIndex);
 	}
 }

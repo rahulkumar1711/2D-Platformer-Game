@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
 	{
 		if (collision.gameObject.GetComponent<PlayerController>() != null)
 		{
+			SoundsManager.Instance.Play(Sounds.EnemyAttack);
 			PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 			playerController.DecreaseHealth();
 		}
