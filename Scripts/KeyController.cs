@@ -9,6 +9,7 @@ public class KeyController : MonoBehaviour
 		if (collision.gameObject.GetComponent<PlayerController>() != null)
 		{
 			PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+			SoundsManager.Instance.Play(Sounds.CollectKey);
 			playerController.PickUpKey();
 			Destroy(gameObject);
 		}
